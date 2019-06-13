@@ -34,7 +34,7 @@ h2
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
 }
 
-#product, #email, #butt {
+#product, #email, #butt, #price {
     display: block;
     width: 80%;
     margin: 0 auto 10% auto;
