@@ -11,13 +11,38 @@ from email.mime.text import MIMEText
 from file import *
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Product.db'
+db = SQLAlchemy(app)
+
+class products(db.Model):
+	id = db.Column('product_id', db.Integer, primary_key = True)
+	name = db.Column(db.String(1000))
+	url = db.Column(db.String(5000))
+	price = db.Column(db.String)
+	email = db.Column(db.String(1000))
+
+	def __init__(self,name,price,url,email):
+		self.name = name
+		self.price = price
+		self.url = url
+		self.email = email
+
+db.create_all()
 
 def get_price(email,name,url,price):
-	f = 1
-	for i in range(5):
-		if not f:
-			break
-		sleep(10)
+
+	db.create_all()
+	prods=products.query.all()
+
+	for product in prods:
+		
+		url = product.url
+		name = product.name
+		email = product.email
+		price = product.price
+		id = product.id
+
+		print(id,name,price, email)
 		page = requests.get(url)
 		soup = BeautifulSoup(page.content, 'html.parser')
 		product = soup.find('div', class_='_1vC4OE _3qQ9m1')
@@ -27,7 +52,10 @@ def get_price(email,name,url,price):
 
 		if int(amt,10) < int(price,10):
 			send_email(email,name,price,amt,url)
-			f = 0
+			remove = products.query.filter_by(id=id).first()
+			db.session.delete(remove)
+			db.session.commit()
+		sleep(2)
 	
 
 def read_template(filename):
@@ -38,7 +66,7 @@ def read_template(filename):
 def send_email(email,name,above,actual,url):
 	message_template = read_template('message.txt')
 	
-	s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+	s = smtplib.SMTP(host='smtp-mail.outlook.com', port=587)
 	s.starttls()
 	s.login(MY_ADDRESS, PASSWORD)
 
@@ -61,14 +89,6 @@ def send_email(email,name,above,actual,url):
 @app.route("/")
 def home():
 	return render_template('home.html',topic='Home')
-
-@app.route("/confirm")
-def confirm():
-	return render_template('confirm.html')
-
-@app.route("/url", methods = ['GET', 'POST'])
-def confirm_url(url):
-	return json.dumps(url)
 
 @app.route('/', methods = ['GET', 'POST'])
 def new():
@@ -108,8 +128,12 @@ def price():
 	email = data['email']
 	price = data['price']
 
+	product = products(name,price,url,email)
+	db.session.add(product)
+	db.session.commit()
+
 	get_price(email,name,url,price)
-	return 1
+	return render_template('home.html')
 
 
 if __name__ == '__main__':
