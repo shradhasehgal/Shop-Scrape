@@ -9,6 +9,11 @@
 </head>
 <body>
 	<h1> eCommerce Web Scraping </h1>
+	<div class ="confirm" style="display: none">
+		<p>Thank you for using ShopScrape. </p>
+		<p>You will be notified by email when your product falls below the price.</p>
+	</div>
+	<div class="rest">
 	<div class ="box">
 		<form>
 			<h2> Track Item </h2>
@@ -32,6 +37,7 @@
 		<input type="url" name ="url" id="url" placeholder="URL for product">
 		<input type="submit" id="submit" value="Submit">
 	</div>
+	</div>
 </body>
 <script> 
 
@@ -51,13 +57,16 @@ $('form').on('submit', function (e) {
 });
 
 $('button.yes').click(function (e){
+
+	$('.confirm').show()
+	$('.rest').hide();
 	e.preventDefault();
 	info["name"] = document.getElementById("product").value;
 	info["email"] = document.getElementById("email").value;
 	info["price"] = document.getElementById("price").value;
-	console.log(info)
 	dict = JSON.stringify(info);
-	console.log(dict)
+
+
 	$.ajax({
         type: "POST",
         url:"/price",
@@ -67,8 +76,8 @@ $('button.yes').click(function (e){
 });
 
 $('button.no').click(function (e){
-	$("#buttons").hide()
-	$("#link").show()
+	$('#buttons').hide()
+	$('#link').show()
 });
 
 $('input#submit').click(function (e){
@@ -77,9 +86,10 @@ $('input#submit').click(function (e){
 	info["email"] = document.getElementById("email").value;
 	info["price"] = document.getElementById("price").value;
 	info["link"] = document.getElementById("url").value;
-	console.log(info)
 	dict = JSON.stringify(info);
-	console.log(dict)
+	$('.confirm').show()
+	$('.rest').hide()
+
 	$.ajax({
         type: "POST",
         url:"/price",

@@ -28,6 +28,7 @@ def get_price(email,name,url,price):
 		if int(amt,10) < int(price,10):
 			send_email(email,name,price,amt,url)
 			f = 0
+	
 
 def read_template(filename):
     with open(filename, 'r', encoding='utf-8') as template_file:
@@ -60,6 +61,10 @@ def send_email(email,name,above,actual,url):
 @app.route("/")
 def home():
 	return render_template('home.html',topic='Home')
+
+@app.route("/confirm")
+def confirm():
+	return render_template('confirm.html')
 
 @app.route("/url", methods = ['GET', 'POST'])
 def confirm_url(url):
@@ -104,7 +109,7 @@ def price():
 	price = data['price']
 
 	get_price(email,name,url,price)
-	return render_template('home.html')
+	return 1
 
 
 if __name__ == '__main__':

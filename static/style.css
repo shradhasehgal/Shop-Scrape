@@ -58,7 +58,7 @@ h2
     font-size: 1.1em;
 }
 
-a
+a.link
 {
     color: teal;
     text-decoration: none;
@@ -66,5 +66,5 @@ a
     border-bottom: 1px solid;
 }
 
-a:hover{color: black};
-a:visited {color: teal;} 
+a.link:hover{color: black};
+a.link:visited {color: teal;} 
