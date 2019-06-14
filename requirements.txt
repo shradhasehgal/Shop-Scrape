@@ -1,3 +1,2 @@
 Flask
 bs4
-smtplib
