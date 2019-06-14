@@ -26,6 +26,12 @@
 		<button class="yes"> Yes </button>
 		<button class="no"> No </button>
 	</div>
+	<div id="link" style="display: none">
+		<p>Sorry, we could not fetch your product!</p>
+		<p>Kindly provide the link to it.</p>
+		<input type="url" name ="url" id="url" placeholder="URL for product">
+		<input type="submit" id="submit" value="Submit">
+	</div>
 </body>
 <script> 
 
@@ -49,6 +55,28 @@ $('button.yes').click(function (e){
 	info["name"] = document.getElementById("product").value;
 	info["email"] = document.getElementById("email").value;
 	info["price"] = document.getElementById("price").value;
+	console.log(info)
+	dict = JSON.stringify(info);
+	console.log(dict)
+	$.ajax({
+        type: "POST",
+        url:"/price",
+        data: dict,
+        contentType: 'application/json;charset=UTF-8',
+	});
+});
+
+$('button.no').click(function (e){
+	$("#buttons").hide()
+	$("#link").show()
+});
+
+$('input#submit').click(function (e){
+	e.preventDefault();
+	info["name"] = document.getElementById("product").value;
+	info["email"] = document.getElementById("email").value;
+	info["price"] = document.getElementById("price").value;
+	info["link"] = document.getElementById("url").value;
 	console.log(info)
 	dict = JSON.stringify(info);
 	console.log(dict)

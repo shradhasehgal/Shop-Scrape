@@ -79,6 +79,9 @@ def new():
 
 			if not url:
 				url = soup.find_all('a', class_='_31qSD5')
+			
+			if not url:
+				url = soup.find_all('a', class_='_2mylT6')
 
 			url_one = url[0]
 			url = url_one.get('href')
