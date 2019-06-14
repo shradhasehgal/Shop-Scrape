@@ -69,9 +69,6 @@ def confirm_url(url):
 def new():
 	if request.method == 'POST':
 		name = request.form['product']
-		email = request.form['email']
-		price = request.form['price']
-
 		for i in range(5):
 			page = "https://www.flipkart.com/search?q="
 			page += name
