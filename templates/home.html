@@ -5,17 +5,59 @@
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 	<link href="https://fonts.googleapis.com/css?family=Lato|Playfair+Display|Heebo|Roboto:900|PT+Serif:700" rel="stylesheet">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 	<h1> eCommerce Web Scraping </h1>
 	<div class ="box">
-		<form action="{{request.path}}" method="post">
+		<form>
 			<h2> Track Item </h2>
-			<input type="url" name = "product" id="product" placeholder="Product Name">
+			<input type="text" name = "product" id="product" placeholder="Product Name">
 			<input type="email" name = "email" id="email" placeholder="Email id">
 			<input type="number" name = "price" id="price" placeholder="Price">			
 			<input type="submit" id="butt" value="Submit">
 		</form>
 	</div>
+	<div id="confirmlink" style="display:none;">
+		<a href="" target="_blank" class="link">Click here to view product</a>
+	</div>
+	<div id="buttons" style="display:none;">
+		<button class="yes"> Yes </button>
+		<button class="no"> No </button>
+	</div>
 </body>
+<script> 
+
+var info={}
+
+$('form').on('submit', function (e) {
+	e.preventDefault();
+	$.ajax({
+		type: 'post',
+		url: '/',
+		data: $('form').serialize(),
+		success: function (resultData) {
+			info["link"] = resultData;
+			$("#confirmlink").show().find('.link').attr("href", resultData);
+			$("#buttons").show();
+		}
+	});
+});
+
+$('button.yes').click(function (e){
+	e.preventDefault();
+	info["name"] = document.getElementById("product").value;
+	info["email"] = document.getElementById("email").value;
+	info["price"] = document.getElementById("price").value;
+	console.log(info)
+	dict = JSON.stringify(info);
+	console.log(dict)
+	$.ajax({
+        type: "POST",
+        url:"/price",
+        data: dict,
+        contentType: 'application/json;charset=UTF-8',
+	});
+});
+</script>
 </html>
