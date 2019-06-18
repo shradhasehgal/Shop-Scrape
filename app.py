@@ -9,33 +9,23 @@ from string import Template
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from file import *
+import os
+import atexit
+from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Product.db'
 db = SQLAlchemy(app)
 
-class products(db.Model):
-	id = db.Column('product_id', db.Integer, primary_key = True)
-	name = db.Column(db.String(1000))
-	url = db.Column(db.String(5000))
-	price = db.Column(db.String)
-	email = db.Column(db.String(1000))
 
-	def __init__(self,name,price,url,email):
-		self.name = name
-		self.price = price
-		self.url = url
-		self.email = email
-
-db.create_all()
-
-def get_price(email,name,url,price):
-
+def get_price():
 	db.create_all()
 	prods=products.query.all()
 
 	for product in prods:
-		
+			
 		url = product.url
 		name = product.name
 		email = product.email
@@ -55,7 +45,27 @@ def get_price(email,name,url,price):
 			remove = products.query.filter_by(id=id).first()
 			db.session.delete(remove)
 			db.session.commit()
-		sleep(2)
+		sleep(60)
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=get_price, trigger="interval", hours = 3)
+scheduler.start()
+
+class products(db.Model):
+	id = db.Column('product_id', db.Integer, primary_key = True)
+	name = db.Column(db.String(1000))
+	url = db.Column(db.String(5000))
+	price = db.Column(db.String)
+	email = db.Column(db.String(1000))
+
+	def __init__(self,name,price,url,email):
+		self.name = name
+		self.price = price
+		self.url = url
+		self.email = email
+
+db.create_all()
 	
 
 def read_template(filename):
@@ -72,7 +82,6 @@ def send_email(email,name,above,actual,url):
 
 	msg = MIMEMultipart()
 	message = message_template.substitute(PRODUCT_NAME=name,ACTUAL_PRICE=actual,PRODUCT_LINK=url,PRODUCT_PRICE=above)
-	print(message)
 
 
 	msg['From']=MY_ADDRESS
@@ -95,6 +104,7 @@ def new():
 	if request.method == 'POST':
 		name = request.form['product']
 		for i in range(5):
+			print("hurrayyyy")
 			page = "https://www.flipkart.com/search?q="
 			page += name
 			page = requests.get(page)
@@ -132,9 +142,9 @@ def price():
 	db.session.add(product)
 	db.session.commit()
 
-	get_price(email,name,url,price)
 	return render_template('home.html')
 
 
+atexit.register(lambda: cron.shutdown(wait=False))
 if __name__ == '__main__':
 	app.run(debug=True)
