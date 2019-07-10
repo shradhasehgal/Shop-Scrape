@@ -45,7 +45,7 @@ def get_price():
 			remove = products.query.filter_by(id=id).first()
 			db.session.delete(remove)
 			db.session.commit()
-		sleep(10)
+		sleep(15)
 
 
 scheduler = BackgroundScheduler()
