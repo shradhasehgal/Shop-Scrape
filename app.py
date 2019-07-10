@@ -45,7 +45,7 @@ def get_price():
 			remove = products.query.filter_by(id=id).first()
 			db.session.delete(remove)
 			db.session.commit()
-		sleep(15)
+		sleep(5)
 
 
 #scheduler = BackgroundScheduler()
@@ -142,7 +142,7 @@ def price():
 	db.session.add(product)
 	db.session.commit()
 	db.create_all()
-	print(data,url,name,email,price)
+	get_price()
 	return render_template('home.html')
 
 
