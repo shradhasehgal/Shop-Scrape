@@ -48,9 +48,9 @@ def get_price():
 		sleep(15)
 
 
-#scheduler = BackgroundScheduler()
-#scheduler.add_job(func=get_price, trigger="interval", minutes = 1)
-#scheduler.start()
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=get_price, trigger="interval", minutes = 1)
+scheduler.start()
 
 class products(db.Model):
 	id = db.Column('product_id', db.Integer, primary_key = True)
@@ -142,10 +142,9 @@ def price():
 	db.session.add(product)
 	db.session.commit()
 	db.create_all()
-	get_price()
 	return render_template('home.html')
 
 
-#atexit.register(lambda: cron.shutdown(wait=False))
+atexit.register(lambda: cron.shutdown(wait=False))
 if __name__ == '__main__':
 	app.run(debug=True)
