@@ -45,11 +45,11 @@ def get_price():
 			remove = products.query.filter_by(id=id).first()
 			db.session.delete(remove)
 			db.session.commit()
-		sleep(60)
+		sleep(10)
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=get_price, trigger="interval", hours = 3)
+scheduler.add_job(func=get_price, trigger="interval", minutes = 1)
 scheduler.start()
 
 class products(db.Model):
@@ -91,6 +91,7 @@ def send_email(email,name,above,actual,url):
 	msg.attach(MIMEText(message, 'plain'))
 
 	s.send_message(msg)
+	print(msg)
 	del msg
 
 	s.quit()
