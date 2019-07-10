@@ -142,7 +142,7 @@ def price():
 	db.session.add(product)
 	db.session.commit()
 	db.create_all()
-	get_price()
+	print(data,url,name,email,price)
 	return render_template('home.html')
 
 
