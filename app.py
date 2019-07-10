@@ -105,7 +105,6 @@ def new():
 	if request.method == 'POST':
 		name = request.form['product']
 		for i in range(5):
-			print("hurrayyyy")
 			page = "https://www.flipkart.com/search?q="
 			page += name
 			page = requests.get(page)
@@ -142,6 +141,7 @@ def price():
 	product = products(name,price,url,email)
 	db.session.add(product)
 	db.session.commit()
+	db.create_all()
 	get_price()
 	return render_template('home.html')
 
