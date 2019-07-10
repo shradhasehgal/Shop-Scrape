@@ -45,11 +45,11 @@ def get_price():
 			remove = products.query.filter_by(id=id).first()
 			db.session.delete(remove)
 			db.session.commit()
-		sleep(15)
+		sleep(60)
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=get_price, trigger="interval", minutes = 1)
+scheduler.add_job(func=get_price, trigger="interval", hours = 3)
 scheduler.start()
 
 class products(db.Model):
