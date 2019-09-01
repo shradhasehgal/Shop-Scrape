@@ -9,7 +9,7 @@ git clone https://github.com/shradhasehgal/Shop-Scrape
 cd Shop-Scrape
 pip install -r requirements.txt
 ```
-Create a file named file.py and add the following variables to it 
+Create a file named `file.py` and add the following variables to it 
 
 ```
 MY_ADDRESS = "INSERT YOUR OUTLOOK EMAIL-ID HERE"
